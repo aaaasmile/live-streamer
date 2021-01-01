@@ -72,7 +72,7 @@ export default {
             <v-icon>play_for_work</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title>Kill all OmxPlayer</v-list-item-title>
+            <v-list-item-title>Kill all</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>

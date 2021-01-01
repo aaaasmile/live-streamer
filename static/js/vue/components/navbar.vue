@@ -6,7 +6,7 @@
       </v-btn>
       <v-toolbar-title class="text-uppercase grey--text">
         <span class="font-weight-light">Live</span>
-        <span>{{ AppTitle }}</span>
+        <span>Stream</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
     </v-app-bar>
@@ -14,8 +14,8 @@
     <v-navigation-drawer app v-model="drawer">
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title class="title">{{ AppTitle }}</v-list-item-title>
-          <v-list-item-subtitle>Omx player</v-list-item-subtitle>
+          <v-list-item-title class="title">Live</v-list-item-title>
+          <v-list-item-subtitle>Streamer</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
 
