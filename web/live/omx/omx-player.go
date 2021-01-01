@@ -13,7 +13,6 @@ type OmxPlayer struct {
 	mutex         *sync.Mutex
 	state         omxstate.StateOmx
 	chDbOperation chan *idl.DbOperation
-	cmdLineArr    []string
 	PlayList      *playlist.LLPlayList
 	Providers     map[string]idl.StreamProvider
 	ChAction      chan *omxstate.ActionDef
@@ -24,7 +23,6 @@ func NewOmxPlayer(chDbop chan *idl.DbOperation) *OmxPlayer {
 	res := OmxPlayer{
 		mutex:         &sync.Mutex{},
 		chDbOperation: chDbop,
-		cmdLineArr:    make([]string, 0),
 		Providers:     make(map[string]idl.StreamProvider),
 		ChAction:      cha,
 	}

@@ -12,7 +12,7 @@ type StreamProvider interface {
 	GetTitle() string
 	GetDescription() string
 	Name() string
-	GetStreamerCmd(cmdLineArr []string) string
+	GetStreamerCmd() string
 	CheckStatus(chDbOperation chan *DbOperation) error
 	CreateStopChannel() chan struct{}
 	GetCmdStopChannel() chan struct{}

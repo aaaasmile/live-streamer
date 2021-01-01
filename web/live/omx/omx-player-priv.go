@@ -2,7 +2,6 @@ package omx
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -94,10 +93,7 @@ func (op *OmxPlayer) startPlayListCurrent(prov idl.StreamProvider) error {
 
 	log.Println("Start player wit URI ", uri)
 
-	if len(op.cmdLineArr) == 0 {
-		return fmt.Errorf("Command line is not set")
-	}
-	cmd := prov.GetStreamerCmd(op.cmdLineArr)
+	cmd := prov.GetStreamerCmd()
 	log.Println("Start the command: ", cmd)
 	op.execCommand(uri, cmd, prov.CreateStopChannel())
 

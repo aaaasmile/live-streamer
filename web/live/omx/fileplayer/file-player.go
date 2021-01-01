@@ -59,14 +59,14 @@ func (fp *FilePlayer) GetDescription() string {
 func (fp *FilePlayer) Name() string {
 	return "file"
 }
-func (fp *FilePlayer) GetStreamerCmd(cmdLineArr []string) string {
-	args := strings.Join(cmdLineArr, " ")
-	cmd := fmt.Sprintf("omxplayer %s %s", args, fp.URI)
+func (fp *FilePlayer) GetStreamerCmd() string {
+	//args := strings.Join(cmdLineArr, " ")
+	cmd := fmt.Sprintf("cvlc %s %s", fp.URI, `--sout="#transcode{vcodec=none,acodec=mp3,ab=128,channels=2,samplerate=44100}:http{mux=mp3,dst=:5550/stream.mp3}" --sout-keep`)
 	return cmd
 }
 func (fp *FilePlayer) CheckStatus(chDbOperation chan *idl.DbOperation) error {
 	st := &omxstate.StateOmx{}
-	
+
 	if fp.Info == nil {
 		info := infoFile{
 			// TODO read from db

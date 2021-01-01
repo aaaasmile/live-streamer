@@ -77,9 +77,8 @@ func (yp *YoutubePl) IsUriForMe(uri string) bool {
 	return false
 }
 
-func (yp *YoutubePl) GetStreamerCmd(cmdLineArr []string) string {
-	args := strings.Join(cmdLineArr, " ")
-	cmd := fmt.Sprintf("omxplayer %s `%s -f mp4 -g %s`", args, getYoutubePlayer(), yp.URI)
+func (yp *YoutubePl) GetStreamerCmd() string {
+	cmd := fmt.Sprintf("cvlc `%s -f mp4 -g %s` %s", getYoutubePlayer(), yp.URI, `--sout="#transcode{vcodec=none,acodec=mp3,ab=128,channels=2,samplerate=44100}:http{mux=mp3,dst=:5550/stream.mp3}" --sout-keep`)
 	return cmd
 }
 
