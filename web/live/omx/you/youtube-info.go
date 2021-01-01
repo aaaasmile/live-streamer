@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/aaaasmile/live-omxctrl/conf"
+	"github.com/aaaasmile/live-streamer/conf"
 )
 
 type InfoLink struct {

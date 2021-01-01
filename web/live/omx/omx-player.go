@@ -2,17 +2,14 @@ package omx
 
 import (
 	"log"
-	"strings"
 	"sync"
 
-	"github.com/aaaasmile/live-omxctrl/web/idl"
-	"github.com/aaaasmile/live-omxctrl/web/live/omx/dbus"
-	"github.com/aaaasmile/live-omxctrl/web/live/omx/omxstate"
-	"github.com/aaaasmile/live-omxctrl/web/live/omx/playlist"
+	"github.com/aaaasmile/live-streamer/web/idl"
+	"github.com/aaaasmile/live-streamer/web/live/omx/omxstate"
+	"github.com/aaaasmile/live-streamer/web/live/omx/playlist"
 )
 
 type OmxPlayer struct {
-	dbus          *dbus.OmxDbus
 	mutex         *sync.Mutex
 	state         omxstate.StateOmx
 	chDbOperation chan *idl.DbOperation
@@ -25,7 +22,6 @@ type OmxPlayer struct {
 func NewOmxPlayer(chDbop chan *idl.DbOperation) *OmxPlayer {
 	cha := make(chan *omxstate.ActionDef)
 	res := OmxPlayer{
-		dbus:          &dbus.OmxDbus{},
 		mutex:         &sync.Mutex{},
 		chDbOperation: chDbop,
 		cmdLineArr:    make([]string, 0),
@@ -48,7 +44,6 @@ func (op *OmxPlayer) ListenOmxState(statusCh chan *omxstate.StateOmx) {
 				delete(op.Providers, k)
 			}
 			op.state.ClearTrackStatus()
-			op.dbus.ClearDbus()
 		} else {
 			op.state.TrackDuration = st.TrackDuration
 			op.state.TrackPosition = st.TrackPosition
@@ -60,17 +55,6 @@ func (op *OmxPlayer) ListenOmxState(statusCh chan *omxstate.StateOmx) {
 		op.state.Info = st.Info
 		op.mutex.Unlock()
 	}
-}
-
-func (op *OmxPlayer) SetCommandLine(commaline string) {
-	op.cmdLineArr = make([]string, 0)
-	arr := strings.Split(commaline, ",")
-	for _, item := range arr {
-		if len(item) > 0 {
-			op.cmdLineArr = append(op.cmdLineArr, item)
-		}
-	}
-	log.Println("Command line set to ", commaline, op.cmdLineArr)
 }
 
 func (op *OmxPlayer) GetTrackDuration() string {
@@ -114,12 +98,6 @@ func (op *OmxPlayer) GetStatePlaying() string {
 	return op.state.StatePlayer.String()
 }
 
-func (op *OmxPlayer) GetStateMute() string {
-	op.mutex.Lock()
-	defer op.mutex.Unlock()
-	return op.state.StateMute.String()
-}
-
 func (op *OmxPlayer) GetStateTitle() string {
 	op.mutex.Lock()
 	defer op.mutex.Unlock()
@@ -145,13 +123,6 @@ func (op *OmxPlayer) GetCurrURI() string {
 	op.mutex.Lock()
 	defer op.mutex.Unlock()
 	return op.state.CurrURI
-}
-
-func (op *OmxPlayer) GetDbus() *dbus.OmxDbus {
-	log.Println("GetDbus")
-	op.mutex.Lock()
-	defer op.mutex.Unlock()
-	return op.dbus
 }
 
 func (op *OmxPlayer) StartPlay(URI string, prov idl.StreamProvider) error {
@@ -238,97 +209,6 @@ func (op *OmxPlayer) CheckStatus(uri string) error {
 	}
 
 	return nil
-}
-
-func (op *OmxPlayer) Resume() (string, error) {
-	return op.resumeOrPause("Play")
-}
-
-func (op *OmxPlayer) Pause() (string, error) {
-	return op.resumeOrPause("Pause")
-}
-
-func (op *OmxPlayer) resumeOrPause(act string) (string, error) {
-	log.Println("Resume/pause action ", act)
-	op.mutex.Lock()
-	defer op.mutex.Unlock()
-	var res omxstate.SPstateplaying
-	if op.state.CurrURI != "" {
-		if err := op.dbus.CallSimpleAction(act); err != nil {
-			return "", err
-		}
-		if act == "Pause" {
-			log.Println("Pause")
-			op.ChAction <- &omxstate.ActionDef{Action: omxstate.ActPause}
-			res = omxstate.SPpause
-		} else {
-			log.Println("Resume")
-			op.dbus.CallSimpleAction("Play")
-			op.ChAction <- &omxstate.ActionDef{Action: omxstate.ActPlaying}
-			res = omxstate.SPplaying
-		}
-	} else {
-		log.Println("Ignore request in state ", act, op.state)
-		res = op.state.StatePlayer
-	}
-	return res.String(), nil
-}
-
-func (op *OmxPlayer) VolumeUp() error {
-	op.mutex.Lock()
-	defer op.mutex.Unlock()
-
-	if op.state.CurrURI != "" {
-		log.Println("VolumeUp")
-		op.dbus.CallIntAction("Action", 18)
-	}
-	return nil
-}
-
-func (op *OmxPlayer) VolumeDown() error {
-	op.mutex.Lock()
-	defer op.mutex.Unlock()
-
-	if op.state.CurrURI != "" {
-		log.Println("VolumeDown")
-		op.dbus.CallIntAction("Action", 17)
-	}
-	return nil
-}
-
-func (op *OmxPlayer) VolumeMute() (string, error) {
-	return op.muteUmute("Mute")
-}
-
-func (op *OmxPlayer) VolumeUnmute() (string, error) {
-	return op.muteUmute("Unmute")
-}
-
-func (op *OmxPlayer) muteUmute(act string) (string, error) {
-	log.Println("Voulme action request: ", act)
-	op.mutex.Lock()
-	defer op.mutex.Unlock()
-
-	var res omxstate.SMstatemute
-	if (op.state.StatePlayer == omxstate.SPplaying) ||
-		(op.state.StatePlayer == omxstate.SPpause) {
-		log.Println("Volume", act)
-		if err := op.dbus.CallSimpleAction(act); err != nil {
-			return "", err
-		}
-		if act == "Unmute" {
-			res = omxstate.SMnormal
-			op.ChAction <- &omxstate.ActionDef{Action: omxstate.ActUnmute}
-		} else {
-			res = omxstate.SMmuted
-			op.ChAction <- &omxstate.ActionDef{Action: omxstate.ActMute}
-		}
-	} else {
-		log.Println("Ignore request in state ", act, op.state)
-		res = op.state.StateMute
-	}
-
-	return res.String(), nil
 }
 
 func (op *OmxPlayer) PowerOff() error {

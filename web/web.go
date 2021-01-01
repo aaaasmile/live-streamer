@@ -20,7 +20,7 @@ func RunService(configfile string) error {
 
 	conf.ReadConfig(configfile)
 	log.Println("Configuration is read")
-	if err := live.InitFromConfig(conf.Current.OmxCmdParams, conf.Current.DebugVerbose, conf.Current.DBPath); err != nil {
+	if err := live.InitFromConfig(conf.Current.DebugVerbose, conf.Current.DBPath); err != nil {
 		return err
 	}
 	util.UseRelativeRoot = conf.Current.UseRelativeRoot

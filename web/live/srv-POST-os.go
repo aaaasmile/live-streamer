@@ -38,11 +38,11 @@ func handleOSRequest(w http.ResponseWriter, req *http.Request) error {
 		// no more commands could be handled.
 		// For developement use the console
 		log.Println("Service restart request received")
-		cmdStr = "sudo systemctl restart live-omxctrl"
+		cmdStr = "sudo systemctl restart live-streamer"
 		execCmdInBackground(cmdStr)
-	case "kill-all-omx":
-		log.Println("Kill all Omxplayer")
-		cmdStr = "sudo killall omxplayer.bin"
+	case "kill-all-vlc":
+		log.Println("Kill all Vlc")
+		cmdStr = "sudo killall cvlc"
 		execCmdInBackground(cmdStr)
 	default:
 		return fmt.Errorf("Command not recognized %s", reqCmd.Cmd)

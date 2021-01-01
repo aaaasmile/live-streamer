@@ -11,12 +11,6 @@ func handlePost(w http.ResponseWriter, req *http.Request) error {
 	lastPath := getURLForRoute(req.RequestURI)
 	log.Println("Check the last path ", lastPath)
 	switch lastPath {
-	case "Resume":
-		err = handlePauseOrResume(w, req, player, "Resume")
-	case "Pause":
-		err = handlePauseOrResume(w, req, player, "Pause")
-	case "ChangeVolume":
-		err = handleChangeVolume(w, req, player)
 	case "SetPowerState":
 		err = handleSetPowerState(w, req, player)
 	case "GetPlayerState":

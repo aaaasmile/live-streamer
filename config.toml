@@ -5,11 +5,10 @@
 
 # used to develop on pi3 target
 
-ServiceURL = "192.168.2.19:5549" # 5549 is a develop test 5548 is the deployed
-RootURLPattern = "/omx/"
+ServiceURL = "192.168.2.19:5551" # 5551 is a develop test 5552 is the deployed
+RootURLPattern = "/str/"
 UseRelativeRoot = true
 DebugVerbose = false
-OmxCmdParams = "-o,hdmi" #comma separated, example -o,local. Could not be empty 
-DBPath= "/home/igors/projects/go/db/test-livedata.db"
+DBPath= "/home/igors/projects/go/live-streamer/db/test/test-data.db"
 TmpInfo= "/home/igors/tmp/info"
 VueLibName = "vue.js"

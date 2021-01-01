@@ -5,8 +5,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/aaaasmile/live-omxctrl/db"
-	"github.com/aaaasmile/live-omxctrl/web/idl"
+	"github.com/aaaasmile/live-streamer/db"
+	"github.com/aaaasmile/live-streamer/web/idl"
 )
 
 type infoFile struct {

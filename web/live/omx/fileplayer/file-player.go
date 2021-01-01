@@ -9,7 +9,6 @@ import (
 
 	"github.com/aaaasmile/live-streamer/db"
 	"github.com/aaaasmile/live-streamer/web/idl"
-	"github.com/aaaasmile/live-streamer/web/live/omx/dbus"
 	"github.com/aaaasmile/live-streamer/web/live/omx/omxstate"
 )
 
@@ -25,7 +24,6 @@ type infoFile struct {
 type FilePlayer struct {
 	URI     string
 	Info    *infoFile
-	Dbus    *dbus.OmxDbus
 	chClose chan struct{}
 }
 
@@ -68,10 +66,7 @@ func (fp *FilePlayer) GetStreamerCmd(cmdLineArr []string) string {
 }
 func (fp *FilePlayer) CheckStatus(chDbOperation chan *idl.DbOperation) error {
 	st := &omxstate.StateOmx{}
-	if err := fp.Dbus.CheckTrackStatus(st); err != nil {
-		return err
-	}
-
+	
 	if fp.Info == nil {
 		info := infoFile{
 			// TODO read from db

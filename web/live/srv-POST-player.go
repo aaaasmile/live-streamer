@@ -19,7 +19,7 @@ import (
 func getProviderForURI(uri string, pl *omx.OmxPlayer) (idl.StreamProvider, error) {
 	streamers := make([]idl.StreamProvider, 0)
 	streamers = append(streamers, &you.YoutubePl{TmpInfo: conf.Current.TmpInfo})
-	streamers = append(streamers, &fileplayer.FilePlayer{Dbus: pl.GetDbus()})
+	streamers = append(streamers, &fileplayer.FilePlayer{})
 	streamers = append(streamers, &radio.RadioPlayer{})
 
 	for _, prov := range streamers {
@@ -158,86 +158,6 @@ func checkAfterStartPlay(sleepTime int, uri string, pl *omx.OmxPlayer) error {
 	return err
 }
 
-func handleChangeVolume(w http.ResponseWriter, req *http.Request, pl *omx.OmxPlayer) error {
-	rawbody, err := ioutil.ReadAll(req.Body)
-	if err != nil {
-		return err
-	}
-	reqVol := struct {
-		VolumeType string `json:"volume"`
-	}{}
-
-	if err := json.Unmarshal(rawbody, &reqVol); err != nil {
-		return err
-	}
-
-	log.Println("Change volume request ", reqVol)
-
-	switch reqVol.VolumeType {
-	case "up":
-		if err = pl.VolumeUp(); err != nil {
-			return err
-		}
-		return returnStatus(w, req, pl)
-	case "down":
-		if err = pl.VolumeDown(); err != nil {
-			return err
-		}
-		return returnStatus(w, req, pl)
-	}
-
-	stateMute := ""
-	switch reqVol.VolumeType {
-	case "mute":
-		if stateMute, err = pl.VolumeMute(); err != nil {
-			return err
-		}
-	case "unmute":
-		if stateMute, err = pl.VolumeUnmute(); err != nil {
-			return err
-		}
-	default:
-		return fmt.Errorf("Change volume request not recognized %s", reqVol.VolumeType)
-	}
-	res := struct {
-		Mute string `json:"mute"`
-		Type string `json:"type"`
-	}{
-		Type: "mute",
-		Mute: stateMute,
-	}
-	log.Println("Mute state ", stateMute)
-	return writeResponseNoWsBroadcast(w, res)
-}
-
-func handlePauseOrResume(w http.ResponseWriter, req *http.Request, pl *omx.OmxPlayer, act string) error {
-	log.Println("Resume request ")
-	statePlay := ""
-	var err error
-	switch act {
-	case "Resume":
-		if statePlay, err = pl.Resume(); err != nil {
-			return err
-		}
-	case "Pause":
-		if statePlay, err = pl.Pause(); err != nil {
-			return err
-		}
-	default:
-		return fmt.Errorf("Action in pause/resume %s not recognized", act)
-	}
-
-	res := struct {
-		PlayState string `json:"playstate"`
-		Type      string `json:"type"`
-	}{
-		PlayState: statePlay,
-		Type:      "playsate",
-	}
-	log.Println("Playing state ", statePlay)
-	return writeResponseNoWsBroadcast(w, res)
-}
-
 func handlePlayerState(w http.ResponseWriter, req *http.Request, pl *omx.OmxPlayer) error {
 	return returnStatus(w, req, pl)
 }
@@ -252,7 +172,6 @@ func returnStatus(w http.ResponseWriter, req *http.Request, pl *omx.OmxPlayer) e
 func returnStatusAfterCheck(w http.ResponseWriter, req *http.Request, pl *omx.OmxPlayer) error {
 	res := struct {
 		Player        string `json:"player"`
-		Mute          string `json:"mute"`
 		URI           string `json:"uri"`
 		TrackDuration string `json:"trackDuration"`
 		TrackPosition string `json:"trackPosition"`
@@ -262,7 +181,6 @@ func returnStatusAfterCheck(w http.ResponseWriter, req *http.Request, pl *omx.Om
 		Description   string `json:"description"`
 	}{
 		Player:        pl.GetStatePlaying(),
-		Mute:          pl.GetStateMute(),
 		URI:           pl.GetCurrURI(),
 		TrackDuration: pl.GetTrackDuration(),
 		TrackPosition: pl.GetTrackPosition(),

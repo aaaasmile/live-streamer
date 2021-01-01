@@ -9,9 +9,9 @@ import (
 	"os/exec"
 	"syscall"
 
-	"github.com/aaaasmile/live-omxctrl/web/idl"
-	"github.com/aaaasmile/live-omxctrl/web/live/omx/omxstate"
-	"github.com/aaaasmile/live-omxctrl/web/live/omx/playlist"
+	"github.com/aaaasmile/live-streamer/web/idl"
+	"github.com/aaaasmile/live-streamer/web/live/omx/omxstate"
+	"github.com/aaaasmile/live-streamer/web/live/omx/playlist"
 )
 
 func (op *OmxPlayer) execCommand(uri, cmdText string, chstop chan struct{}) {

@@ -139,7 +139,6 @@ func listenStatus(statusCh chan *omxstate.StateOmx) {
 		st := <-statusCh
 		resp := struct {
 			Player   string `json:"player"`
-			Mute     string `json:"mute"`
 			URI      string `json:"uri"`
 			Info     string `json:"info"`
 			ItemType string `json:"itemtype"`
@@ -148,7 +147,6 @@ func listenStatus(statusCh chan *omxstate.StateOmx) {
 			Type     string `json:"type"`
 		}{
 			Player:   st.StatePlayer.String(),
-			Mute:     st.StateMute.String(),
 			URI:      st.CurrURI,
 			Info:     st.Info,
 			ItemType: st.ItemType,
@@ -166,14 +164,13 @@ func listenStatus(statusCh chan *omxstate.StateOmx) {
 	}
 }
 
-func InitFromConfig(cmdParam string, debug bool, dbPath string) error {
-	player.SetCommandLine(cmdParam)
+func InitFromConfig(debug bool, dbPath string) error {
 	liteDB.DebugSQL = debug
 	liteDB.SqliteDBPath = dbPath
 	if err := liteDB.OpenSqliteDatabase(); err != nil {
 		return err
 	}
-	log.Println("Handler initialized", cmdParam, debug, dbPath)
+	log.Println("Handler initialized", debug, dbPath)
 	return nil
 }
 
