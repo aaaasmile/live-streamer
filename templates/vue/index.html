@@ -1,0 +1,43 @@
+{{define "base"}}
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="description" content="Live Streamer Control" />
+
+  <title>Live Omx Control</title>
+  <link rel="shortcut icon" type="image/x-icon" href="./static/js/vue/favicon.ico">
+
+  <!-- vuetify -->
+  <link href="./static/js/ext/fontcss.css" rel="stylesheet">
+  <link href="./static/js/ext/vuetify.min.css" rel="stylesheet">
+  <link href="./static/js/ext/icon.css" rel="stylesheet">
+  <link href="./static/js/ext/materialdesignicons.min.css" rel="stylesheet">
+
+  <!-- dev vue -->
+  <script src="{{.RootUrl}}static/js/ext/{{.VueLibName}}"></script>
+  <script src="{{.RootUrl}}static/js/ext/vue-resource.js?{{.Buildnr}}"></script>
+  <!-- prod vue -->
+  <!-- <script src="{{.RootUrl}}static/js/ext/vue_prod.js"></script> -->
+
+  <!-- vuetify after vue-->
+  <script src="./static/js/ext/vuetify.js?{{.Buildnr}}"></script>
+  <script src="./static/js/ext/vue-router.js?{{.Buildnr}}"></script>
+  <script src="./static/js/ext/vuex.js?{{.Buildnr}}"></script>
+
+</head>
+
+<body>
+  <div id="app"></div>
+</body>
+<script>
+  window.myapp = { buildnr: "{{.Buildnr}}" }
+</script>
+<script type="module">
+  import { app } from './static/js/vue/main.js?{{.Buildnr}}'
+</script>
+
+</html>
+{{end}}

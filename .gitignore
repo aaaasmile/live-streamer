@@ -1,0 +1,6 @@
+*.exe
+*.bin
+*.pem
+playlist-data/*.json
+db/test/*
+db/test/*.*

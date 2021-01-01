@@ -1,0 +1,9 @@
+# configuration for pi4
+ServiceURL = "192.168.2.84:5548"
+RootURLPattern = "/omx/"
+UseRelativeRoot = true
+DebugVerbose = false
+OmxCmdParams = "-o,hdmi" #comma separated, example -o,local. Could not be empty
+DBPath= "/home/igors/app/go/db/service-liveomx.db"
+TmpInfo= "/tmp"
+VueLibName = "vue_prod.js"

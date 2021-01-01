@@ -1,0 +1,107 @@
+Per stoppare il sevice si usa:
+sudo systemctl stop live-streamer
+
+Vue si usa con:
+/usr/local/bin/vuetojs.bin -vue ./static/js/vue/views/dashboard.vue
+
+## Deployment su arm direttamente
+In un colpo: ./publish-pi3.sh
+
+## Sviluppo su pi3 arm
+Apri vscode nella directory remota (nota come sia la directory go che fa la differenza tra sviluppo e deploy):
+/home/igor/projects/go/live-streamer/
+
+Sul firewall ho aperto la porta 5551 in intranet con:
+ufw allow from 192.168.2.0/24 to any port 5551
+
+## Service
+Poi si mette il programma live-streamer.bin come service di sistema.
+sudo nano /lib/systemd/system/live-streamer.service
+
+Abilitare il service:
+sudo systemctl enable live-streamer.service
+Ora si fa partire il service (resistente al reboot):
+sudo systemctl start live-streamer
+
+Per vedere i logs si usa:
+sudo journalctl -f -u live-streamer
+
+## Service Config
+Questo il conetnuto del file che compare con:
+sudo nano /lib/systemd/system/live-streamer.service
+Poi si fa l'enable:
+sudo systemctl enable live-streamer.service
+E infine lo start:
+sudo systemctl start live-streamer
+
+
+Qui segue il contenuto del file live-streamer.service
+Nota il Type=idle che è meglio di simple in quanto così 
+viene fatto partire quando anche la wlan ha ottenuto l'IP intranet
+per consentire l'accesso.
+
+Se sviluppo con igors usando un'altra porta la 5551.
+La porta di deployment è invece la 5552.
+
+
+-------------------------------- file content
+[Install]
+WantedBy=multi-user.target
+
+[Unit]
+Description=live-streamer service
+ConditionPathExists=/home/igors/app/live-streamer/current/live-streamer.bin
+After=network.target
+
+[Service]
+Type=idle
+User=pi
+Group=pi
+LimitNOFILE=1024
+
+Restart=on-failure
+RestartSec=10
+startLimitIntervalSec=60
+
+WorkingDirectory=/home/igors/app/live-streamer/current/
+ExecStart=/home/igors/app/live-streamer/current/live-streamer.bin
+
+# make sure log directory exists and owned by syslog
+PermissionsStartOnly=true
+ExecStartPre=/bin/mkdir -p /var/log/live-streamer
+ExecStartPre=/bin/chown pi:pi /var/log/live-streamer
+ExecStartPre=/bin/chmod 755 /var/log/live-streamer
+StandardOutput=syslog
+StandardError=syslog
+
+------------------------------------------- end file content
+
+
+== urls
+//u = "http://stream.srg-ssr.ch/m/rsc_de/aacp_96"
+//u = "https://www.youtube.com/watch?v=3czUk1MmmvA"
+
+== Sqlite
+Per vedere come si usa sqlite in full search mode vedi
+https://github.com/aaaasmile/iol-importer/blob/master/Readme_iol-vienna.txt
+Su raspberry il database si può gestire con interfaccia grafica usando sqlitebrowser.
+sudo apt-get install sqlite3
+sudo apt-get install sqlitebrowser
+
+Per creare un db dal file ref si usa:
+cat ./db/ref/player-repo-ref.db.sql | sqlite3 test-livedata.db
+
+Per fare andare sqlitebrowser bisogna far partire Xming server in windwos.
+Poin WLC si lancia:
+export DISPLAY=localhost:0.0
+ssh -Y pi4
+
+
+
+Per stoppare il sevice si usa:
+sudo systemctl stop live-streamer
+
+Per generare js
+ /usr/local/bin/vuetojs.bin -vue ./static/js/vue/views/dashboard.vue 
+
+
