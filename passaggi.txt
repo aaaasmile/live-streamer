@@ -80,6 +80,7 @@ StandardError=syslog
 == urls
 //u = "http://stream.srg-ssr.ch/m/rsc_de/aacp_96"
 //u = "https://www.youtube.com/watch?v=3czUk1MmmvA"
+// u = /home/igors/music/gianna-fenomenale.mp3
 
 == Sqlite
 Per vedere come si usa sqlite in full search mode vedi
@@ -96,12 +97,15 @@ Poin WLC si lancia:
 export DISPLAY=localhost:0.0
 ssh -Y pi4
 
-
-
 Per stoppare il sevice si usa:
 sudo systemctl stop live-streamer
 
 Per generare js
- /usr/local/bin/vuetojs.bin -vue ./static/js/vue/views/dashboard.vue 
+vuetojs.bin -vue ./static/js/vue/views/dashboard.vue 
+
+## TODO
+- Il controllo cvlc è inesistente. Non riconosce gli errori, quando finisce e lo stato.
+- Url ip  porte dello streamer sono hard coded.
+ 
 
 

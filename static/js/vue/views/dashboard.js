@@ -59,14 +59,15 @@ export default {
     <v-col xs="12" sm="12" md="10" lg="8" xl="6">
       <v-card color="grey lighten-4" flat tile>
         <v-col cols="12">
-          <v-row>
-            <v-col cols="12" flex-nowrap>
+          <v-container>
+            <v-row>
               <v-text-field
                 @keydown.enter="enterPress"
                 v-model="uriToPlay"
                 label="Select an URI"
               ></v-text-field>
-              <v-spacer></v-spacer>
+            </v-row>
+            <v-row>
               <v-tooltip bottom>
                 <template v-slot:activator="{ on }">
                   <v-btn
@@ -80,8 +81,12 @@ export default {
                 </template>
                 <span>Stream uri</span>
               </v-tooltip>
-            </v-col>
-          </v-row>
+              <v-spacer></v-spacer>
+              <a href="http://192.168.2.19:5550/stream.mp3" target="_blank"
+                >Stream</a
+              >
+            </v-row>
+          </v-container>
           <v-row>
             <v-col cols="12">
               <v-card flat tile>
