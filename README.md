@@ -1,2 +1,2 @@
 # live-streamer
-Stream music from your Pi
+Music streamer for your Pi
