@@ -19,20 +19,25 @@ var (
 func main() {
 	const (
 		pi3 = "pi3"
+		pi4 = "pi4"
 	)
 	var outdir = flag.String("outdir", "",
 		fmt.Sprintf("Output zip directory. If empty use the hardcoded one: %s\n", defOutDir))
 
+	tt := []string{pi3, pi4}
 	var target = flag.String("target", "",
-		fmt.Sprintf("Target of deployment: %s", pi3))
+		fmt.Sprintf("Target of deployment: %v", tt))
 
 	flag.Parse()
 
 	rootDirRel := ".."
 	pathItems := []string{"static", "templates"}
 	switch *target {
-	case pi4:
+	case pi3:
 		pathItems = append(pathItems, "deploy/config_files/pi3_config.toml")
+		pathItems[0] = "live-streamer.bin"
+	case pi4:
+		pathItems = append(pathItems, "deploy/config_files/pi4_config.toml")
 		pathItems[0] = "live-streamer.bin"
 	default:
 		log.Fatalf("Deployment target %s is not recognized or not specified", *target)

@@ -1,9 +1,9 @@
-# configuration for pi3
-ServiceURL = "192.168.2.19:5551"
+# configuration for pi4
+ServiceURL = "192.168.2.84:5551"
 RootURLPattern = "/str/"
 UseRelativeRoot = true
 DebugVerbose = false
 DBPath= "/home/igors/app/db/service-streamer.db"
 TmpInfo= "/tmp"
 VueLibName = "vue_prod.js"
-StreamURL = "http://192.168.2.19:5550/stream.mp3"
+StreamURL = "http://192.168.2.84:5550/stream.mp3"

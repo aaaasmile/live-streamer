@@ -1,5 +1,5 @@
 #!/bin/bash
-read -p "Update the live-streamer (live-streamer on pi3) y/n ? " -n 1 -r
+read -p "Update the live-streamer (live-streamer on pi) y/n ? " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Nn]$ ]]
 then
