@@ -116,7 +116,7 @@ export default {
       <v-row justify="center">
         <v-col xs="12" sm="12" md="10" lg="8" xl="6">
           <v-row justify="center">
-            <v-toolbar flat>
+            <v-toolbar color="light-green lighten-5" flat>
               <v-tooltip bottom>
                 <template v-slot:activator="{ on }">
                   <v-btn icon v-on="on" @click="previousTitle">

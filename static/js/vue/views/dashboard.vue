@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center">
     <v-col xs="12" sm="12" md="10" lg="8" xl="6">
-      <v-card color="grey lighten-4" flat tile>
+      <v-card color="teal lighten-5" flat tile>
         <v-col cols="12">
           <v-container>
             <v-row>
@@ -33,7 +33,7 @@
           </v-container>
           <v-row>
             <v-col cols="12">
-              <v-card flat tile>
+              <v-card color="light-green lighten-5" flat tile>
                 <v-card-title>Streaming {{ ListName }}</v-card-title>
                 <div class="mx-4">
                   <div class="subtitle-2">URI</div>

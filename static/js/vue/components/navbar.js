@@ -19,7 +19,7 @@ export default {
   },
   template: `
   <nav>
-    <v-app-bar dense flat>
+    <v-app-bar color="teal lighten-5" dense flat>
       <v-btn text color="grey" @click="drawer = !drawer">
         <v-icon>mdi-menu</v-icon>
       </v-btn>

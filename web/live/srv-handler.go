@@ -113,7 +113,7 @@ func writeErrorResponse(w http.ResponseWriter, errorcode int, resp interface{}) 
 }
 
 func listenDbOperations(dbCh chan *idl.DbOperation) {
-	log.Println("Waiting for history item")
+	log.Println("Waiting for db operation item")
 	for {
 		item := <-dbCh
 		proc := false

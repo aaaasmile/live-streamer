@@ -3,9 +3,9 @@
 # Near line 0 (last key parsed ''): bare keys cannot contain '\ufeff'
 # It is because this config.toml file is saved with BOM. Notepad does it, please use "save as.." with UTF-8 without BOM.
 
-# used to develop on pi3 target
+# used to develop on pi target
 
-ServiceURL = "192.168.2.19:5551" # 5551 is a develop test 5552 is the deployed
+ServiceURL = "192.168.2.84:5551" # 5551 is a develop test 5552 is the deployed
 RootURLPattern = "/str/"
 UseRelativeRoot = true
 DebugVerbose = false
