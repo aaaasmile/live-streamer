@@ -46,7 +46,7 @@ const (
 	SMundef
 )
 
-type StateOmx struct {
+type StateStreamer struct {
 	CurrURI       string
 	StatePlayer   SPstateplaying
 	StateMute     SMstatemute
@@ -59,7 +59,7 @@ type StateOmx struct {
 	TrackStatus   string
 }
 
-func (so *StateOmx) ClearTrackStatus() {
+func (so *StateStreamer) ClearTrackStatus() {
 	so.TrackDuration = ""
 	so.TrackPosition = ""
 	so.TrackStatus = ""
@@ -81,11 +81,11 @@ const (
 type ActionDef struct {
 	URI        string
 	Action     ActionTD
-	ChStateRsp chan *StateOmx
+	ChStateRsp chan *StateStreamer
 }
 
 type WorkerState struct {
-	ChStatus chan *StateOmx
+	ChStatus chan *StateStreamer
 }
 
 func ListenStateAction(actCh chan *ActionDef, workers []WorkerState) {
@@ -99,7 +99,7 @@ func ListenStateAction(actCh chan *ActionDef, workers []WorkerState) {
 		st := <-actCh
 		olduriPlaying := uriPlaying
 		log.Println("New action in state: ", st.Action.String(), stateCurrent.String())
-		stateNext := StateOmx{CurrURI: olduriPlaying, StatePlayer: SPundef, StateMute: SMundef}
+		stateNext := StateStreamer{CurrURI: olduriPlaying, StatePlayer: SPundef, StateMute: SMundef}
 		switch stateCurrent {
 		case SPoff:
 			switch st.Action {

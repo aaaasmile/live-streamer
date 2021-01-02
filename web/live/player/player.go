@@ -15,7 +15,7 @@ import (
 
 type StrPlayer struct {
 	mutex         *sync.Mutex
-	state         StateOmx
+	state         StateStreamer
 	chDbOperation chan *idl.DbOperation
 	PlayList      *playlist.LLPlayList
 	Providers     map[string]idl.StreamProvider
@@ -34,8 +34,8 @@ func NewStrPlayer(chDbop chan *idl.DbOperation) *StrPlayer {
 	return &res
 }
 
-func (op *StrPlayer) ListenOmxState(statusCh chan *StateOmx) {
-	log.Println("start listenplayer. Waiting for status change in StrPlayer")
+func (op *StrPlayer) ListenStreamerState(statusCh chan *StateStreamer) {
+	log.Println("start listen player. Waiting for status change in StrPlayer")
 	for {
 		st := <-statusCh
 		op.mutex.Lock()

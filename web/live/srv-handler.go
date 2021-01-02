@@ -134,7 +134,7 @@ func listenDbOperations(dbCh chan *idl.DbOperation) {
 	}
 }
 
-func listenStatus(statusCh chan *player.StateOmx) {
+func listenStatus(statusCh chan *player.StateStreamer) {
 	log.Println("Waiting for status in srvhanlder")
 	for {
 		st := <-statusCh
@@ -218,16 +218,16 @@ func init() {
 	dbOpCh := make(chan *idl.DbOperation)
 	workers := make([]player.WorkerState, 0)
 
-	chStatus1 := make(chan *player.StateOmx)
+	chStatus1 := make(chan *player.StateStreamer)
 	w1 := player.WorkerState{ChStatus: chStatus1}
 	workers = append(workers, w1)
 	go listenStatus(w1.ChStatus)
 
-	chStatus2 := make(chan *player.StateOmx)
+	chStatus2 := make(chan *player.StateStreamer)
 	g_player = player.NewStrPlayer(dbOpCh)
 	w2 := player.WorkerState{ChStatus: chStatus2}
 	workers = append(workers, w2)
-	go g_player.ListenOmxState(chStatus2)
+	go g_player.ListenStreamerState(chStatus2)
 
 	g_liteDB = &db.LiteDB{}
 
