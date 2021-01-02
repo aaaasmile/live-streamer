@@ -21,7 +21,7 @@ func handleHistoryRequest(w http.ResponseWriter, req *http.Request) error {
 		return err
 	}
 	log.Println("history Request", paraReq)
-	list, err := liteDB.FetchHistory(paraReq.PageIx, paraReq.PageSize)
+	list, err := g_liteDB.FetchHistory(paraReq.PageIx, paraReq.PageSize)
 	if err != nil {
 		return err
 	}

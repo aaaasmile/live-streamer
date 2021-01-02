@@ -10,6 +10,7 @@ import (
 
 	"github.com/aaaasmile/live-streamer/conf"
 	"github.com/aaaasmile/live-streamer/web/idl"
+	"github.com/aaaasmile/live-streamer/web/live/player"
 	"github.com/aaaasmile/live-streamer/web/live/player/radio"
 	"github.com/aaaasmile/live-streamer/web/live/player/soundfile"
 	"github.com/aaaasmile/live-streamer/web/live/player/you-tube"
@@ -118,7 +119,7 @@ func handleSetPowerState(w http.ResponseWriter, req *http.Request, pl *player.Om
 		err = pl.PowerOff()
 		return nil
 	case "on":
-		last, err := liteDB.FetchHistory(0, 1)
+		last, err := g_liteDB.FetchHistory(0, 1)
 		if err != nil {
 			return err
 		}

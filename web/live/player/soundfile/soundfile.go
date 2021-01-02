@@ -3,13 +3,11 @@ package soundfile
 import (
 	"fmt"
 	"log"
-	"strconv"
 	"strings"
 	"time"
 
 	"github.com/aaaasmile/live-streamer/db"
 	"github.com/aaaasmile/live-streamer/web/idl"
-	player "github.com/aaaasmile/live-streamer/web/live/player/state"
 )
 
 type infoFile struct {
@@ -65,13 +63,11 @@ func (fp *FilePlayer) GetStreamerCmd() string {
 	return cmd
 }
 func (fp *FilePlayer) CheckStatus(chDbOperation chan *idl.DbOperation) error {
-	st := &player.StateOmx{}
-
 	if fp.Info == nil {
 		info := infoFile{
 			// TODO read from db
 		}
-		info.DurationInSec, _ = strconv.Atoi(st.TrackDuration)
+		info.DurationInSec = 0 // TODO
 		info.TrackDuration = time.Duration(int64(info.DurationInSec) * int64(time.Second)).String()
 		hi := db.HistoryItem{
 			URI:           fp.URI,
@@ -90,8 +86,6 @@ func (fp *FilePlayer) CheckStatus(chDbOperation chan *idl.DbOperation) error {
 		log.Println("file-player info status set")
 	}
 
-	fp.Info.TrackPosition = st.TrackPosition
-	fp.Info.TrackStatus = st.TrackStatus
 	log.Println("Status set to ", fp.Info)
 	return nil
 }

@@ -13,11 +13,12 @@ import (
 	"github.com/aaaasmile/live-streamer/conf"
 	"github.com/aaaasmile/live-streamer/db"
 	"github.com/aaaasmile/live-streamer/web/idl"
+	"github.com/aaaasmile/live-streamer/web/live/player"
 )
 
 var (
-	player *player.OmxPlayer
-	liteDB *db.LiteDB
+	g_player *player.OmxPlayer
+	g_liteDB *db.LiteDB
 )
 
 type PageCtx struct {
@@ -121,7 +122,7 @@ func listenDbOperations(dbCh chan *idl.DbOperation) {
 		if item.DbOpType == idl.DbOpHistoryInsert {
 			if vv, ok := item.Payload.(db.HistoryItem); ok {
 				proc = true
-				if err := liteDB.InsertHistoryItem(&vv); err != nil {
+				if err := g_liteDB.InsertHistoryItem(&vv); err != nil {
 					log.Println("Error on insert history: ", err)
 				}
 			}
@@ -165,9 +166,9 @@ func listenStatus(statusCh chan *player.StateOmx) {
 }
 
 func InitFromConfig(debug bool, dbPath string) error {
-	liteDB.DebugSQL = debug
-	liteDB.SqliteDBPath = dbPath
-	if err := liteDB.OpenSqliteDatabase(); err != nil {
+	g_liteDB.DebugSQL = debug
+	g_liteDB.SqliteDBPath = dbPath
+	if err := g_liteDB.OpenSqliteDatabase(); err != nil {
 		return err
 	}
 	log.Println("Handler initialized", debug, dbPath)
@@ -184,7 +185,7 @@ func HandlerShutdown() {
 	})
 	log.Println("Force poweroff player")
 	go func(chst1 chan struct{}) {
-		player.PowerOff()
+		g_player.PowerOff()
 		chst1 <- struct{}{}
 	}(chstop)
 	go func(chst2 chan struct{}) {
@@ -223,13 +224,13 @@ func init() {
 	go listenStatus(w1.ChStatus)
 
 	chStatus2 := make(chan *player.StateOmx)
-	player = player.NewOmxPlayer(dbOpCh)
+	g_player = player.NewOmxPlayer(dbOpCh)
 	w2 := player.WorkerState{ChStatus: chStatus2}
 	workers = append(workers, w2)
-	go player.ListenOmxState(chStatus2)
+	go g_player.ListenOmxState(chStatus2)
 
-	liteDB = &db.LiteDB{}
+	g_liteDB = &db.LiteDB{}
 
 	go listenDbOperations(dbOpCh)
-	go player.ListenStateAction(player.ChAction, workers)
+	go player.ListenStateAction(g_player.ChAction, workers)
 }

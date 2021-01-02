@@ -12,15 +12,15 @@ func handlePost(w http.ResponseWriter, req *http.Request) error {
 	log.Println("Check the last path ", lastPath)
 	switch lastPath {
 	case "SetPowerState":
-		err = handleSetPowerState(w, req, player)
+		err = handleSetPowerState(w, req, g_player)
 	case "GetPlayerState":
-		err = handlePlayerState(w, req, player)
+		err = handlePlayerState(w, req, g_player)
 	case "NextTitle":
-		err = handleNextTitle(w, req, player)
+		err = handleNextTitle(w, req, g_player)
 	case "PreviousTitle":
-		err = handlePreviousTitle(w, req, player)
+		err = handlePreviousTitle(w, req, g_player)
 	case "PlayUri":
-		err = handlePlayUri(w, req, player)
+		err = handlePlayUri(w, req, g_player)
 	case "OSRequest":
 		err = handleOSRequest(w, req)
 	case "FetchHistory":

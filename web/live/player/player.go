@@ -10,7 +10,6 @@ import (
 	"syscall"
 
 	"github.com/aaaasmile/live-streamer/web/idl"
-	"github.com/aaaasmile/live-streamer/web/live/player"
 	"github.com/aaaasmile/live-streamer/web/live/player/playlist"
 )
 
@@ -24,7 +23,7 @@ type OmxPlayer struct {
 }
 
 func NewOmxPlayer(chDbop chan *idl.DbOperation) *OmxPlayer {
-	cha := make(chan *player.ActionDef)
+	cha := make(chan *ActionDef)
 	res := OmxPlayer{
 		mutex:         &sync.Mutex{},
 		chDbOperation: chDbop,
@@ -35,13 +34,13 @@ func NewOmxPlayer(chDbop chan *idl.DbOperation) *OmxPlayer {
 	return &res
 }
 
-func (op *OmxPlayer) ListenOmxState(statusCh chan *player.StateOmx) {
+func (op *OmxPlayer) ListenOmxState(statusCh chan *StateOmx) {
 	log.Println("start listenplayer. Waiting for status change in omxplayer")
 	for {
 		st := <-statusCh
 		op.mutex.Lock()
 		log.Println("Set OmxPlayer state ", st)
-		if st.StatePlayer == player.SPoff {
+		if st.StatePlayer == SPoff {
 			k := op.state.CurrURI
 			if _, ok := op.Providers[k]; ok {
 				delete(op.Providers, k)
@@ -240,12 +239,12 @@ func (op *OmxPlayer) freeAllProviders() {
 
 func (op *OmxPlayer) execCommand(uri, cmdText string, chstop chan struct{}) {
 	log.Println("Prepare to start the player with execCommand")
-	go func(cmdText string, actCh chan *player.ActionDef, uri string, chstop chan struct{}) {
+	go func(cmdText string, actCh chan *ActionDef, uri string, chstop chan struct{}) {
 		log.Println("Submit the command in background ", cmdText)
 		cmd := exec.Command("bash", "-c", cmdText)
-		actCh <- &player.ActionDef{
+		actCh <- &ActionDef{
 			URI:    uri,
-			Action: player.ActPlaying,
+			Action: ActPlaying,
 		}
 
 		var stdoutBuf, stderrBuf bytes.Buffer
@@ -282,9 +281,9 @@ func (op *OmxPlayer) execCommand(uri, cmdText string, chstop chan struct{}) {
 		}
 
 		log.Println("Player has been terminated. Cmd was ", cmdText)
-		actCh <- &player.ActionDef{
+		actCh <- &ActionDef{
 			URI:    uri,
-			Action: player.ActTerminate,
+			Action: ActTerminate,
 		}
 
 	}(cmdText, op.ChAction, uri, chstop)
