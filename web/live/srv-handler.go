@@ -13,12 +13,10 @@ import (
 	"github.com/aaaasmile/live-streamer/conf"
 	"github.com/aaaasmile/live-streamer/db"
 	"github.com/aaaasmile/live-streamer/web/idl"
-	omx "github.com/aaaasmile/live-streamer/web/live/player"
-	omxstate "github.com/aaaasmile/live-streamer/web/live/player/state"
 )
 
 var (
-	player *omx.OmxPlayer
+	player *player.OmxPlayer
 	liteDB *db.LiteDB
 )
 
@@ -135,7 +133,7 @@ func listenDbOperations(dbCh chan *idl.DbOperation) {
 	}
 }
 
-func listenStatus(statusCh chan *omxstate.StateOmx) {
+func listenStatus(statusCh chan *player.StateOmx) {
 	log.Println("Waiting for status in srvhanlder")
 	for {
 		st := <-statusCh
@@ -217,21 +215,21 @@ func HandlerShutdown() {
 
 func init() {
 	dbOpCh := make(chan *idl.DbOperation)
-	workers := make([]omxstate.WorkerState, 0)
+	workers := make([]player.WorkerState, 0)
 
-	chStatus1 := make(chan *omxstate.StateOmx)
-	w1 := omxstate.WorkerState{ChStatus: chStatus1}
+	chStatus1 := make(chan *player.StateOmx)
+	w1 := player.WorkerState{ChStatus: chStatus1}
 	workers = append(workers, w1)
 	go listenStatus(w1.ChStatus)
 
-	chStatus2 := make(chan *omxstate.StateOmx)
-	player = omx.NewOmxPlayer(dbOpCh)
-	w2 := omxstate.WorkerState{ChStatus: chStatus2}
+	chStatus2 := make(chan *player.StateOmx)
+	player = player.NewOmxPlayer(dbOpCh)
+	w2 := player.WorkerState{ChStatus: chStatus2}
 	workers = append(workers, w2)
 	go player.ListenOmxState(chStatus2)
 
 	liteDB = &db.LiteDB{}
 
 	go listenDbOperations(dbOpCh)
-	go omxstate.ListenStateAction(player.ChAction, workers)
+	go player.ListenStateAction(player.ChAction, workers)
 }

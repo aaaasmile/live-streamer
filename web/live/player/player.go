@@ -10,20 +10,21 @@ import (
 	"syscall"
 
 	"github.com/aaaasmile/live-streamer/web/idl"
+	"github.com/aaaasmile/live-streamer/web/live/player"
 	"github.com/aaaasmile/live-streamer/web/live/player/playlist"
 )
 
 type OmxPlayer struct {
 	mutex         *sync.Mutex
-	state         omxstate.StateOmx
+	state         StateOmx
 	chDbOperation chan *idl.DbOperation
 	PlayList      *playlist.LLPlayList
 	Providers     map[string]idl.StreamProvider
-	ChAction      chan *omxstate.ActionDef
+	ChAction      chan *ActionDef
 }
 
 func NewOmxPlayer(chDbop chan *idl.DbOperation) *OmxPlayer {
-	cha := make(chan *omxstate.ActionDef)
+	cha := make(chan *player.ActionDef)
 	res := OmxPlayer{
 		mutex:         &sync.Mutex{},
 		chDbOperation: chDbop,
@@ -34,13 +35,13 @@ func NewOmxPlayer(chDbop chan *idl.DbOperation) *OmxPlayer {
 	return &res
 }
 
-func (op *OmxPlayer) ListenOmxState(statusCh chan *omxstate.StateOmx) {
-	log.Println("start listenOmxState. Waiting for status change in omxplayer")
+func (op *OmxPlayer) ListenOmxState(statusCh chan *player.StateOmx) {
+	log.Println("start listenplayer. Waiting for status change in omxplayer")
 	for {
 		st := <-statusCh
 		op.mutex.Lock()
 		log.Println("Set OmxPlayer state ", st)
-		if st.StatePlayer == omxstate.SPoff {
+		if st.StatePlayer == player.SPoff {
 			k := op.state.CurrURI
 			if _, ok := op.Providers[k]; ok {
 				delete(op.Providers, k)
@@ -239,12 +240,12 @@ func (op *OmxPlayer) freeAllProviders() {
 
 func (op *OmxPlayer) execCommand(uri, cmdText string, chstop chan struct{}) {
 	log.Println("Prepare to start the player with execCommand")
-	go func(cmdText string, actCh chan *omxstate.ActionDef, uri string, chstop chan struct{}) {
+	go func(cmdText string, actCh chan *player.ActionDef, uri string, chstop chan struct{}) {
 		log.Println("Submit the command in background ", cmdText)
 		cmd := exec.Command("bash", "-c", cmdText)
-		actCh <- &omxstate.ActionDef{
+		actCh <- &player.ActionDef{
 			URI:    uri,
-			Action: omxstate.ActPlaying,
+			Action: player.ActPlaying,
 		}
 
 		var stdoutBuf, stderrBuf bytes.Buffer
@@ -281,9 +282,9 @@ func (op *OmxPlayer) execCommand(uri, cmdText string, chstop chan struct{}) {
 		}
 
 		log.Println("Player has been terminated. Cmd was ", cmdText)
-		actCh <- &omxstate.ActionDef{
+		actCh <- &player.ActionDef{
 			URI:    uri,
-			Action: omxstate.ActTerminate,
+			Action: player.ActTerminate,
 		}
 
 	}(cmdText, op.ChAction, uri, chstop)

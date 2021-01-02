@@ -1,4 +1,4 @@
-package fileplayer
+package soundfile
 
 import (
 	"fmt"
@@ -9,6 +9,7 @@ import (
 
 	"github.com/aaaasmile/live-streamer/db"
 	"github.com/aaaasmile/live-streamer/web/idl"
+	player "github.com/aaaasmile/live-streamer/web/live/player/state"
 )
 
 type infoFile struct {
@@ -64,7 +65,7 @@ func (fp *FilePlayer) GetStreamerCmd() string {
 	return cmd
 }
 func (fp *FilePlayer) CheckStatus(chDbOperation chan *idl.DbOperation) error {
-	st := &omxstate.StateOmx{}
+	st := &player.StateOmx{}
 
 	if fp.Info == nil {
 		info := infoFile{
