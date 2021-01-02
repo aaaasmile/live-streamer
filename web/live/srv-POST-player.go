@@ -16,7 +16,7 @@ import (
 	"github.com/aaaasmile/live-streamer/web/live/player/you-tube"
 )
 
-func getProviderForURI(uri string, pl *player.OmxPlayer) (idl.StreamProvider, error) {
+func getProviderForURI(uri string, pl *player.StrPlayer) (idl.StreamProvider, error) {
 	streamers := make([]idl.StreamProvider, 0)
 	streamers = append(streamers, &you.YoutubePl{TmpInfo: conf.Current.TmpInfo})
 	streamers = append(streamers, &soundfile.FilePlayer{})
@@ -30,7 +30,7 @@ func getProviderForURI(uri string, pl *player.OmxPlayer) (idl.StreamProvider, er
 	return nil, fmt.Errorf("Unable to find a provider for the uri %s", uri)
 }
 
-func handlePlayUri(w http.ResponseWriter, req *http.Request, pl *player.OmxPlayer) error {
+func handlePlayUri(w http.ResponseWriter, req *http.Request, pl *player.StrPlayer) error {
 	rawbody, err := ioutil.ReadAll(req.Body)
 	if err != nil {
 		return err
@@ -54,7 +54,7 @@ func handlePlayUri(w http.ResponseWriter, req *http.Request, pl *player.OmxPlaye
 	return returnStatus(w, req, pl)
 }
 
-func startUri(uri string, pl *player.OmxPlayer) error {
+func startUri(uri string, pl *player.StrPlayer) error {
 	if uri == "" {
 		return fmt.Errorf("Nothing to play")
 	}
@@ -72,7 +72,7 @@ func startUri(uri string, pl *player.OmxPlayer) error {
 	return nil
 }
 
-func handleNextTitle(w http.ResponseWriter, req *http.Request, pl *player.OmxPlayer) error {
+func handleNextTitle(w http.ResponseWriter, req *http.Request, pl *player.StrPlayer) error {
 	uri, err := pl.NextTitle()
 	if err != nil {
 		return err
@@ -86,7 +86,7 @@ func handleNextTitle(w http.ResponseWriter, req *http.Request, pl *player.OmxPla
 	return returnStatus(w, req, pl)
 }
 
-func handlePreviousTitle(w http.ResponseWriter, req *http.Request, pl *player.OmxPlayer) error {
+func handlePreviousTitle(w http.ResponseWriter, req *http.Request, pl *player.StrPlayer) error {
 	uri, err := pl.PreviousTitle()
 	if err != nil {
 		return err
@@ -99,7 +99,7 @@ func handlePreviousTitle(w http.ResponseWriter, req *http.Request, pl *player.Om
 	return returnStatus(w, req, pl)
 }
 
-func handleSetPowerState(w http.ResponseWriter, req *http.Request, pl *player.OmxPlayer) error {
+func handleSetPowerState(w http.ResponseWriter, req *http.Request, pl *player.StrPlayer) error {
 	rawbody, err := ioutil.ReadAll(req.Body)
 	if err != nil {
 		return err
@@ -139,7 +139,7 @@ func handleSetPowerState(w http.ResponseWriter, req *http.Request, pl *player.Om
 	return returnStatusAfterCheck(w, req, pl)
 }
 
-func checkAfterStartPlay(sleepTime int, uri string, pl *player.OmxPlayer) error {
+func checkAfterStartPlay(sleepTime int, uri string, pl *player.StrPlayer) error {
 	var err error
 	log.Println("Check the status after play ", sleepTime)
 	time.Sleep(200 * time.Millisecond)
@@ -158,18 +158,18 @@ func checkAfterStartPlay(sleepTime int, uri string, pl *player.OmxPlayer) error 
 	return err
 }
 
-func handlePlayerState(w http.ResponseWriter, req *http.Request, pl *player.OmxPlayer) error {
+func handlePlayerState(w http.ResponseWriter, req *http.Request, pl *player.StrPlayer) error {
 	return returnStatus(w, req, pl)
 }
 
-func returnStatus(w http.ResponseWriter, req *http.Request, pl *player.OmxPlayer) error {
+func returnStatus(w http.ResponseWriter, req *http.Request, pl *player.StrPlayer) error {
 	if err := pl.CheckStatus(pl.GetCurrURI()); err != nil {
 		return err
 	}
 	return returnStatusAfterCheck(w, req, pl)
 }
 
-func returnStatusAfterCheck(w http.ResponseWriter, req *http.Request, pl *player.OmxPlayer) error {
+func returnStatusAfterCheck(w http.ResponseWriter, req *http.Request, pl *player.StrPlayer) error {
 	res := struct {
 		Player        string `json:"player"`
 		URI           string `json:"uri"`

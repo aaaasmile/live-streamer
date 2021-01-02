@@ -13,7 +13,7 @@ import (
 	"github.com/aaaasmile/live-streamer/web/live/player/playlist"
 )
 
-type OmxPlayer struct {
+type StrPlayer struct {
 	mutex         *sync.Mutex
 	state         StateOmx
 	chDbOperation chan *idl.DbOperation
@@ -22,9 +22,9 @@ type OmxPlayer struct {
 	ChAction      chan *ActionDef
 }
 
-func NewOmxPlayer(chDbop chan *idl.DbOperation) *OmxPlayer {
+func NewStrPlayer(chDbop chan *idl.DbOperation) *StrPlayer {
 	cha := make(chan *ActionDef)
-	res := OmxPlayer{
+	res := StrPlayer{
 		mutex:         &sync.Mutex{},
 		chDbOperation: chDbop,
 		Providers:     make(map[string]idl.StreamProvider),
@@ -34,12 +34,12 @@ func NewOmxPlayer(chDbop chan *idl.DbOperation) *OmxPlayer {
 	return &res
 }
 
-func (op *OmxPlayer) ListenOmxState(statusCh chan *StateOmx) {
-	log.Println("start listenplayer. Waiting for status change in omxplayer")
+func (op *StrPlayer) ListenOmxState(statusCh chan *StateOmx) {
+	log.Println("start listenplayer. Waiting for status change in StrPlayer")
 	for {
 		st := <-statusCh
 		op.mutex.Lock()
-		log.Println("Set OmxPlayer state ", st)
+		log.Println("Set StrPlayer state ", st)
 		if st.StatePlayer == SPoff {
 			k := op.state.CurrURI
 			if _, ok := op.Providers[k]; ok {
@@ -59,7 +59,7 @@ func (op *OmxPlayer) ListenOmxState(statusCh chan *StateOmx) {
 	}
 }
 
-func (op *OmxPlayer) GetTrackDuration() string {
+func (op *StrPlayer) GetTrackDuration() string {
 	op.mutex.Lock()
 	defer op.mutex.Unlock()
 	if prov, ok := op.Providers[op.state.CurrURI]; ok {
@@ -71,7 +71,7 @@ func (op *OmxPlayer) GetTrackDuration() string {
 	return op.state.TrackDuration
 }
 
-func (op *OmxPlayer) GetTrackPosition() string {
+func (op *StrPlayer) GetTrackPosition() string {
 	op.mutex.Lock()
 	defer op.mutex.Unlock()
 	if prov, ok := op.Providers[op.state.CurrURI]; ok {
@@ -82,7 +82,7 @@ func (op *OmxPlayer) GetTrackPosition() string {
 	return op.state.TrackPosition
 }
 
-func (op *OmxPlayer) GetTrackStatus() string {
+func (op *StrPlayer) GetTrackStatus() string {
 	op.mutex.Lock()
 	defer op.mutex.Unlock()
 	if prov, ok := op.Providers[op.state.CurrURI]; ok {
@@ -94,13 +94,13 @@ func (op *OmxPlayer) GetTrackStatus() string {
 	return op.state.TrackStatus
 }
 
-func (op *OmxPlayer) GetStatePlaying() string {
+func (op *StrPlayer) GetStatePlaying() string {
 	op.mutex.Lock()
 	defer op.mutex.Unlock()
 	return op.state.StatePlayer.String()
 }
 
-func (op *OmxPlayer) GetStateTitle() string {
+func (op *StrPlayer) GetStateTitle() string {
 	op.mutex.Lock()
 	defer op.mutex.Unlock()
 	if prov, ok := op.Providers[op.state.CurrURI]; ok {
@@ -110,7 +110,7 @@ func (op *OmxPlayer) GetStateTitle() string {
 	return ""
 }
 
-func (op *OmxPlayer) GetStateDescription() string {
+func (op *StrPlayer) GetStateDescription() string {
 	op.mutex.Lock()
 	defer op.mutex.Unlock()
 	if prov, ok := op.Providers[op.state.CurrURI]; ok {
@@ -120,14 +120,14 @@ func (op *OmxPlayer) GetStateDescription() string {
 	return ""
 }
 
-func (op *OmxPlayer) GetCurrURI() string {
+func (op *StrPlayer) GetCurrURI() string {
 	log.Println("getCurrURI")
 	op.mutex.Lock()
 	defer op.mutex.Unlock()
 	return op.state.CurrURI
 }
 
-func (op *OmxPlayer) StartPlay(URI string, prov idl.StreamProvider) error {
+func (op *StrPlayer) StartPlay(URI string, prov idl.StreamProvider) error {
 	var err error
 	if op.PlayList, err = playlist.CreatePlaylistFromProvider(URI, prov); err != nil {
 		return err
@@ -137,7 +137,7 @@ func (op *OmxPlayer) StartPlay(URI string, prov idl.StreamProvider) error {
 	return op.startPlayListCurrent(prov)
 }
 
-func (op *OmxPlayer) PreviousTitle() (string, error) {
+func (op *StrPlayer) PreviousTitle() (string, error) {
 	if op.PlayList == nil {
 		log.Println("Nothing to play because no playlist is provided")
 		return "", nil
@@ -166,7 +166,7 @@ func (op *OmxPlayer) PreviousTitle() (string, error) {
 	return u, nil
 }
 
-func (op *OmxPlayer) NextTitle() (string, error) {
+func (op *StrPlayer) NextTitle() (string, error) {
 	if op.PlayList == nil {
 		log.Println("Nothing to play because no playlist is provided")
 		return "", nil
@@ -194,7 +194,7 @@ func (op *OmxPlayer) NextTitle() (string, error) {
 	return u, nil
 }
 
-func (op *OmxPlayer) CheckStatus(uri string) error {
+func (op *StrPlayer) CheckStatus(uri string) error {
 	if uri == "" {
 		return nil
 	}
@@ -213,16 +213,16 @@ func (op *OmxPlayer) CheckStatus(uri string) error {
 	return nil
 }
 
-func (op *OmxPlayer) PowerOff() error {
+func (op *StrPlayer) PowerOff() error {
 	op.mutex.Lock()
 	defer op.mutex.Unlock()
 
-	log.Println("Power off, terminate omxplayer with signal kill")
+	log.Println("Power off, terminate StrPlayer with signal kill")
 	op.freeAllProviders()
 	return nil
 }
 
-func (op *OmxPlayer) freeAllProviders() {
+func (op *StrPlayer) freeAllProviders() {
 	for k, prov := range op.Providers {
 		log.Println("Sending kill signal to ", k)
 		ch := prov.GetCmdStopChannel()
@@ -237,7 +237,7 @@ func (op *OmxPlayer) freeAllProviders() {
 
 }
 
-func (op *OmxPlayer) execCommand(uri, cmdText string, chstop chan struct{}) {
+func (op *StrPlayer) execCommand(uri, cmdText string, chstop chan struct{}) {
 	log.Println("Prepare to start the player with execCommand")
 	go func(cmdText string, actCh chan *ActionDef, uri string, chstop chan struct{}) {
 		log.Println("Submit the command in background ", cmdText)
@@ -289,7 +289,7 @@ func (op *OmxPlayer) execCommand(uri, cmdText string, chstop chan struct{}) {
 	}(cmdText, op.ChAction, uri, chstop)
 }
 
-func (op *OmxPlayer) startPlayListCurrent(prov idl.StreamProvider) error {
+func (op *StrPlayer) startPlayListCurrent(prov idl.StreamProvider) error {
 	log.Println("Start current item ", op.PlayList)
 	var curr *playlist.PlayItem
 	var ok bool

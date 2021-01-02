@@ -17,7 +17,7 @@ import (
 )
 
 var (
-	g_player *player.OmxPlayer
+	g_player *player.StrPlayer
 	g_liteDB *db.LiteDB
 )
 
@@ -224,7 +224,7 @@ func init() {
 	go listenStatus(w1.ChStatus)
 
 	chStatus2 := make(chan *player.StateOmx)
-	g_player = player.NewOmxPlayer(dbOpCh)
+	g_player = player.NewStrPlayer(dbOpCh)
 	w2 := player.WorkerState{ChStatus: chStatus2}
 	workers = append(workers, w2)
 	go g_player.ListenOmxState(chStatus2)
