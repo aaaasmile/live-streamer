@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 	"path/filepath"
 	"strings"
 	"time"
@@ -13,7 +14,7 @@ import (
 )
 
 var (
-	defOutDir = "..\\..\\Deployed"
+	defOutDir = "../../Zips"
 )
 
 func main() {
@@ -42,7 +43,7 @@ func main() {
 	default:
 		log.Fatalf("Deployment target %s is not recognized or not specified", *target)
 	}
-	log.Printf("Create the zip package for target %s", *target)
+	log.Printf("Create the zip package for target %s and out dir ", *target)
 
 	outFn := getOutFileName(*outdir, *target)
 	depl.CreateDeployZip(rootDirRel, pathItems, outFn, func(pathItem string) string {
@@ -57,6 +58,15 @@ func getOutFileName(outdir string, tgt string) string {
 	if outdir == "" {
 		outdir = defOutDir
 	}
+	var err error
+	outdir, err = filepath.Abs(outdir)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if _, err := os.Stat(outdir); os.IsNotExist(err) {
+		log.Fatalf("Directory for zip generation not found %s", outdir)
+	}
+	log.Println("Using zip out directoy", outdir)
 	vn := depl.GetVersionNrFromFile("../web/idl/idl.go", "")
 	log.Println("Version is ", vn)
 
