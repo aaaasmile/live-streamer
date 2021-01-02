@@ -32,14 +32,12 @@ func main() {
 	flag.Parse()
 
 	rootDirRel := ".."
-	pathItems := []string{"static", "templates"}
+	pathItems := []string{"live-streamer.bin", "static", "templates"}
 	switch *target {
 	case pi3:
 		pathItems = append(pathItems, "deploy/config_files/pi3_config.toml")
-		pathItems[0] = "live-streamer.bin"
 	case pi4:
 		pathItems = append(pathItems, "deploy/config_files/pi4_config.toml")
-		pathItems[0] = "live-streamer.bin"
 	default:
 		log.Fatalf("Deployment target %s is not recognized or not specified", *target)
 	}
