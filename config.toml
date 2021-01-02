@@ -12,3 +12,4 @@ DebugVerbose = false
 DBPath= "/home/igors/projects/go/live-streamer/db/test/test-data.db"
 TmpInfo= "/home/igors/tmp/info"
 VueLibName = "vue.js"
+StreamURL = "http://192.168.2.84:5550/stream.mp3"

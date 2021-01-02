@@ -33,7 +33,7 @@
   <div id="app"></div>
 </body>
 <script>
-  window.myapp = { buildnr: "{{.Buildnr}}" }
+  window.myapp = { buildnr: "{{.Buildnr}}", streamurl: "{{.StreamURL}}" }
 </script>
 <script type="module">
   import { app } from './static/js/vue/main.js?{{.Buildnr}}'

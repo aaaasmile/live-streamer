@@ -15,8 +15,8 @@ type Config struct {
 	DBPath          string
 	TmpInfo         string
 	VueLibName      string
+	StreamURL       string
 }
-
 
 var Current = &Config{}
 
@@ -28,6 +28,6 @@ func ReadConfig(configfile string) *Config {
 	if _, err := toml.DecodeFile(configfile, &Current); err != nil {
 		log.Fatal(err)
 	}
-	
+
 	return Current
 }

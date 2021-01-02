@@ -26,6 +26,7 @@ type PageCtx struct {
 	RootUrl    string
 	Buildnr    string
 	VueLibName string
+	StreamURL  string
 }
 
 func getURLForRoute(uri string) string {
@@ -72,6 +73,7 @@ func handleGet(w http.ResponseWriter, req *http.Request) error {
 		RootUrl:    conf.Current.RootURLPattern,
 		Buildnr:    idl.Buildnr,
 		VueLibName: conf.Current.VueLibName,
+		StreamURL:  conf.Current.StreamURL,
 	}
 	templName := "templates/vue/index.html"
 

@@ -13,8 +13,12 @@ export default {
         previous: '',
         title: '',
         description: '',
+        stream_url: '',
     },
     mutations: {
+        streamingUrl(state, data){
+            state.stream_url = data
+        },
         playerstate(state, data) {
             if (!data){
                 return

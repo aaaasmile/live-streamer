@@ -39,6 +39,11 @@ export default {
     })
   },
   methods: {
+    openStreamUrl(){
+      console.log('Open stream url in a new window', this.$store.state.ps.stream_url)
+      window.open(this.$store.state.ps.stream_url, "_blank")
+      // open something like http://192.168.2.19:5550/stream.mp3" target="_blank"
+    },
     playUri() {
       if (this.uriToPlay === ''){
         console.log('Nothig to play')
@@ -82,9 +87,18 @@ export default {
                 <span>Stream uri</span>
               </v-tooltip>
               <v-spacer></v-spacer>
-              <a href="http://192.168.2.19:5550/stream.mp3" target="_blank"
-                >Stream</a
-              >
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    icon
+                    @click="openStreamUrl"
+                    v-on="on"
+                  >
+                    <v-icon>mdi-view-stream</v-icon>
+                  </v-btn>
+                </template>
+                <span>Open stream url</span>
+              </v-tooltip>
             </v-row>
           </v-container>
           <v-row>

@@ -13,7 +13,6 @@ export const app = new Vue({
 		return {
 			Buildnr: "",
 			links: routes,
-			AppTitle: "Omx Control",
 			drawer: false,
 			connection: null,
 		}
@@ -26,6 +25,8 @@ export const app = new Vue({
 	created() {
 		// keep in mind that all that is comming from index.html is a string. Boolean or numerics need to be parsed.
 		this.Buildnr = window.myapp.buildnr
+		const streamurl = window.myapp.streamurl
+		this.$store.commit('streamingUrl', streamurl)
 		let port = location.port;
 		let prefix = (window.location.protocol.match(/https/) ? 'wss' : 'ws')
 		let socketUrl = prefix + "://" + location.hostname + (port ? ':' + port : '') + "/websocket";
