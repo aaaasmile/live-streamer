@@ -3,14 +3,14 @@
 # Near line 0 (last key parsed ''): bare keys cannot contain '\ufeff'
 # It is because this config.toml file is saved with BOM. Notepad does it, please use "save as.." with UTF-8 without BOM.
 
-# used to develop on pi target
+# used to develop on pi 3 target
 
-ServiceURL = "192.168.2.19:5551" # 5551 is a develop test 5552 is the deployed
+ServiceHost = "192.168.2.19"
+ServicePort = 5551  # 5551 is a develop test 5552 is the deployed
 RootURLPattern = "/str/"
 UseRelativeRoot = true
 DebugVerbose = false
 DBPath= "/home/igors/projects/go/live-streamer/db/test/test-data.db"
 TmpInfo= "/home/igors/tmp/info"
 VueLibName = "vue.js"
-HostStreamURL = "http://192.168.2.19:"
-ConfStreamURL = "5553/stream.mp3"
+ConfStreamURL = "5553/stream.mp3" # develop 5553 deployed on service is the 5550

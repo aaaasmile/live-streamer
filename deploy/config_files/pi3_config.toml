@@ -1,9 +1,10 @@
-# configuration for pi3
-ServiceURL = "192.168.2.19:5551"
+# configuration for deployment pi3
+ServiceHost = "192.168.2.19"
+ServicePort = 5552  # 5551 is a develop test 5552 is the deployed
 RootURLPattern = "/str/"
 UseRelativeRoot = true
 DebugVerbose = false
 DBPath= "/home/igors/app/db/service-streamer.db"
 TmpInfo= "/tmp"
 VueLibName = "vue_prod.js"
-StreamURL = "http://192.168.2.19:5550/stream.mp3"
+ConfStreamURL = "5550/stream.mp3" # develop 5553 deployed on service is the 5550
