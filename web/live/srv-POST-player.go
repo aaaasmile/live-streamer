@@ -10,10 +10,10 @@ import (
 
 	"github.com/aaaasmile/live-streamer/conf"
 	"github.com/aaaasmile/live-streamer/web/idl"
-	"github.com/aaaasmile/live-streamer/web/live/omx"
-	"github.com/aaaasmile/live-streamer/web/live/omx/fileplayer"
-	"github.com/aaaasmile/live-streamer/web/live/omx/radio"
-	"github.com/aaaasmile/live-streamer/web/live/omx/you"
+	omx "github.com/aaaasmile/live-streamer/web/live/player"
+	"github.com/aaaasmile/live-streamer/web/live/player/fileplayer"
+	"github.com/aaaasmile/live-streamer/web/live/player/radio"
+	"github.com/aaaasmile/live-streamer/web/live/player/you"
 )
 
 func getProviderForURI(uri string, pl *omx.OmxPlayer) (idl.StreamProvider, error) {

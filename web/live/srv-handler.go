@@ -13,8 +13,8 @@ import (
 	"github.com/aaaasmile/live-streamer/conf"
 	"github.com/aaaasmile/live-streamer/db"
 	"github.com/aaaasmile/live-streamer/web/idl"
-	"github.com/aaaasmile/live-streamer/web/live/omx"
-	"github.com/aaaasmile/live-streamer/web/live/omx/omxstate"
+	omx "github.com/aaaasmile/live-streamer/web/live/player"
+	omxstate "github.com/aaaasmile/live-streamer/web/live/player/state"
 )
 
 var (

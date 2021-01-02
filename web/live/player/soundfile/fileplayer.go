@@ -9,7 +9,6 @@ import (
 
 	"github.com/aaaasmile/live-streamer/db"
 	"github.com/aaaasmile/live-streamer/web/idl"
-	"github.com/aaaasmile/live-streamer/web/live/omx/omxstate"
 )
 
 type infoFile struct {

@@ -1,4 +1,4 @@
-package omxstate
+package player
 
 import "log"
 
