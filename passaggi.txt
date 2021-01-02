@@ -55,8 +55,8 @@ After=network.target
 
 [Service]
 Type=idle
-User=pi
-Group=pi
+User=igors
+Group=igors
 LimitNOFILE=1024
 
 Restart=on-failure
@@ -104,8 +104,9 @@ Per generare js
 vuetojs.bin -vue ./static/js/vue/views/dashboard.vue 
 
 ## TODO
-- Il controllo cvlc è inesistente. Non riconosce gli errori, quando finisce e lo stato.
-- Url ip  porte dello streamer sono hard coded.
+- Il controllo cvlc è inesistente. Usa play and exit. [DONE]
+- Non riconosce gli errori, quando finisce e lo stato.  
+- Url ip  porte dello streamer sono hard coded. [DONE]
  
 
 

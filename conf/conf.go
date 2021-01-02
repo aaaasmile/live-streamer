@@ -15,7 +15,8 @@ type Config struct {
 	DBPath          string
 	TmpInfo         string
 	VueLibName      string
-	StreamURL       string
+	HostStreamURL   string
+	ConfStreamURL   string
 }
 
 var Current = &Config{}

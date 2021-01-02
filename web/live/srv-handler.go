@@ -72,7 +72,7 @@ func handleGet(w http.ResponseWriter, req *http.Request) error {
 		RootUrl:    conf.Current.RootURLPattern,
 		Buildnr:    idl.Buildnr,
 		VueLibName: conf.Current.VueLibName,
-		StreamURL:  conf.Current.StreamURL,
+		StreamURL:  conf.Current.HostStreamURL + conf.Current.ConfStreamURL,
 	}
 	templName := "templates/vue/index.html"
 

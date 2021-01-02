@@ -13,6 +13,7 @@ import (
 type YoutubePl struct {
 	YoutubeInfo *InfoLink
 	URI         string
+	StreamDest  string
 	TmpInfo     string
 	chClose     chan struct{}
 }

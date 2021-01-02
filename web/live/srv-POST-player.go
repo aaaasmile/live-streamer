@@ -18,9 +18,9 @@ import (
 
 func getProviderForURI(uri string, pl *player.StrPlayer) (idl.StreamProvider, error) {
 	streamers := make([]idl.StreamProvider, 0)
-	streamers = append(streamers, &you.YoutubePl{TmpInfo: conf.Current.TmpInfo})
-	streamers = append(streamers, &soundfile.FilePlayer{})
-	streamers = append(streamers, &radio.RadioPlayer{})
+	streamers = append(streamers, &you.YoutubePl{TmpInfo: conf.Current.TmpInfo, StreamDest: conf.Current.ConfStreamURL})
+	streamers = append(streamers, &soundfile.FilePlayer{StreamDest: conf.Current.ConfStreamURL})
+	streamers = append(streamers, &radio.RadioPlayer{StreamDest: conf.Current.ConfStreamURL})
 
 	for _, prov := range streamers {
 		if prov.IsUriForMe(uri) {

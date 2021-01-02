@@ -2,7 +2,7 @@ package idl
 
 var (
 	Appname = "live-streamer"
-	Buildnr = "00.01.01.20210101-00"
+	Buildnr = "00.01.02.20210102-00"
 )
 
 type StreamProvider interface {

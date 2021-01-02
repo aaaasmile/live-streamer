@@ -15,9 +15,10 @@ type infoFile struct {
 }
 
 type RadioPlayer struct {
-	URI     string
-	Info    *infoFile
-	chClose chan struct{}
+	URI        string
+	StreamDest string
+	Info       *infoFile
+	chClose    chan struct{}
 }
 
 func (rp *RadioPlayer) IsUriForMe(uri string) bool {

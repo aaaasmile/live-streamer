@@ -20,9 +20,10 @@ type infoFile struct {
 }
 
 type FilePlayer struct {
-	URI     string
-	Info    *infoFile
-	chClose chan struct{}
+	URI        string
+	Info       *infoFile
+	StreamDest string
+	chClose    chan struct{}
 }
 
 func (fp *FilePlayer) IsUriForMe(uri string) bool {
@@ -59,7 +60,10 @@ func (fp *FilePlayer) Name() string {
 }
 func (fp *FilePlayer) GetStreamerCmd() string {
 	//args := strings.Join(cmdLineArr, " ")
-	cmd := fmt.Sprintf("cvlc %s %s", fp.URI, `--play-and-exit --sout="#transcode{vcodec=none,acodec=mp3,ab=128,channels=2,samplerate=44100}:http{mux=mp3,dst=:5550/stream.mp3}" --sout-keep`)
+	// %s => 5550/stream.mp3
+	raw := `--play-and-exit --sout="#transcode{vcodec=none,acodec=mp3,ab=128,channels=2,samplerate=44100}:http{mux=mp3,dst=:%s}" --sout-keep`
+	paraStr := fmt.Sprintf(raw, fp.StreamDest)
+	cmd := fmt.Sprintf("cvlc %s %s", fp.URI, paraStr)
 	return cmd
 }
 func (fp *FilePlayer) CheckStatus(chDbOperation chan *idl.DbOperation) error {
